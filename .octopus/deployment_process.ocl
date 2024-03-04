@@ -1,0 +1,24 @@
+step "apply-a-terraform-template" {
+    name = "Apply a Terraform template"
+
+    action {
+        action_type = "Octopus.TerraformApply"
+        properties = {
+            Octopus.Action.Aws.AssumeRole = "False"
+            Octopus.Action.Aws.Region = "eu-west-2"
+            Octopus.Action.AwsAccount.UseInstanceRole = "False"
+            Octopus.Action.AwsAccount.Variable = "AWSAccount"
+            Octopus.Action.GitRepository.Source = "Project"
+            Octopus.Action.GoogleCloud.ImpersonateServiceAccount = "False"
+            Octopus.Action.GoogleCloud.UseVMServiceAccount = "True"
+            Octopus.Action.Script.ScriptSource = "GitRepository"
+            Octopus.Action.Terraform.AllowPluginDownloads = "True"
+            Octopus.Action.Terraform.AzureAccount = "False"
+            Octopus.Action.Terraform.GoogleCloudAccount = "False"
+            Octopus.Action.Terraform.ManagedAccount = "AWS"
+            Octopus.Action.Terraform.PlanJsonOutput = "False"
+            Octopus.Action.Terraform.RunAutomaticFileSubstitution = "True"
+        }
+        worker_pool_variable = ""
+    }
+}
