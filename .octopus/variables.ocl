@@ -3,3 +3,11 @@ variable "AWSAccount" {
 
     value "ekstest" {}
 }
+
+variable "OctopusSpace" {
+    value "Spaces-482" {}
+}
+
+variable "OctopusServer" {
+    value "https://octopus-operations.octopus.app" {}
+}
