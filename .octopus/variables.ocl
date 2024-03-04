@@ -1,0 +1,5 @@
+variable "AWSAccount" {
+    type = "AmazonWebServicesAccount"
+
+    value "ekstest" {}
+}
