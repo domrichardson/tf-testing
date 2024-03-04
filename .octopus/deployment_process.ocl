@@ -11,6 +11,7 @@ step "apply-a-terraform-template" {
             Octopus.Action.GitRepository.Source = "Project"
             Octopus.Action.GoogleCloud.ImpersonateServiceAccount = "False"
             Octopus.Action.GoogleCloud.UseVMServiceAccount = "True"
+            Octopus.Action.RunOnServer = "true"
             Octopus.Action.Script.ScriptSource = "GitRepository"
             Octopus.Action.Terraform.AllowPluginDownloads = "True"
             Octopus.Action.Terraform.AzureAccount = "False"
@@ -18,7 +19,13 @@ step "apply-a-terraform-template" {
             Octopus.Action.Terraform.ManagedAccount = "AWS"
             Octopus.Action.Terraform.PlanJsonOutput = "False"
             Octopus.Action.Terraform.RunAutomaticFileSubstitution = "True"
+            OctopusUseBundledTooling = "False"
         }
         worker_pool_variable = ""
+
+        container {
+            feed = "dockerfeed"
+            image = "octopusdeploy/worker-tools:6.1.1-windows.ltsc2022"
+        }
     }
 }
