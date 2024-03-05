@@ -1,13 +1,13 @@
 resource "aws_instance" "DR-TF-EC2" {
   ami             = var.instance_image
   instance_type   = var.instance_type
-  security_groups = [aws_security_group.DR_TF_SG.name]
-  key_name        = aws_key_pair.DR_TF_Key.key_name
+  security_groups = [aws_security_group.SG.name]
+  key_name        = aws_key_pair.KEY.key_name
 
   user_data = file("script.sh")
 
   tags = {
-    Name = "dr-tf-test"
+    Name = var.octopus_target_name
   }
 }
 

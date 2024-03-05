@@ -10,6 +10,10 @@ variable "octopus_spaceid" {
   type = string
 }
 
+variable "octopus_target_name" {
+  type = string
+}
+
 variable "instance_type" {
   type    = string
   default = "t3.micro"

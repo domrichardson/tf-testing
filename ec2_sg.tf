@@ -1,16 +1,16 @@
 
-resource "aws_security_group" "DR_TF_SG" {
-  name        = "DR_TF_SG"
+resource "aws_security_group" "SG" {
+  name        = "${var.octopus_target_name}_SG"
   description = "Dom Terraform SG"
   vpc_id      = "vpc-06d886f059cc53d16"
 
   tags = {
-    Name = "DR_TF_SG"
+    Name = "${var.octopus_target_name}_SG"
   }
 }
 
 resource "aws_vpc_security_group_ingress_rule" "https" {
-  security_group_id = aws_security_group.DR_TF_SG.id
+  security_group_id = aws_security_group.SG.id
   cidr_ipv4         = "0.0.0.0/0"
   #cidr_ipv6         = "::/0"
   from_port   = 443
@@ -20,7 +20,7 @@ resource "aws_vpc_security_group_ingress_rule" "https" {
 }
 
 resource "aws_vpc_security_group_ingress_rule" "http" {
-  security_group_id = aws_security_group.DR_TF_SG.id
+  security_group_id = aws_security_group.SG.id
   cidr_ipv4         = "0.0.0.0/0"
   #cidr_ipv6         = "::/0"
   from_port   = 80
@@ -30,7 +30,7 @@ resource "aws_vpc_security_group_ingress_rule" "http" {
 }
 
 resource "aws_vpc_security_group_ingress_rule" "ssh" {
-  security_group_id = aws_security_group.DR_TF_SG.id
+  security_group_id = aws_security_group.SG.id
   cidr_ipv4         = "0.0.0.0/0"
   #cidr_ipv6         = "::/0"
   from_port   = 22
@@ -40,7 +40,7 @@ resource "aws_vpc_security_group_ingress_rule" "ssh" {
 }
 
 resource "aws_vpc_security_group_ingress_rule" "tentacle" {
-  security_group_id = aws_security_group.DR_TF_SG.id
+  security_group_id = aws_security_group.SG.id
   cidr_ipv4         = "0.0.0.0/0"
   #cidr_ipv6         = "::/0"
   from_port   = 10933
@@ -50,7 +50,7 @@ resource "aws_vpc_security_group_ingress_rule" "tentacle" {
 }
 
 resource "aws_vpc_security_group_egress_rule" "allow_all_traffic_ipv4" {
-  security_group_id = aws_security_group.DR_TF_SG.id
+  security_group_id = aws_security_group.SG.id
   cidr_ipv4         = "0.0.0.0/0"
   #cidr_ipv6         = "::/0"
   ip_protocol = "-1" # semantically equivalent to all ports

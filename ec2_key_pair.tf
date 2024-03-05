@@ -12,7 +12,7 @@ resource "local_file" "TF_Key_Public" {
   filename = "tf-key.pub"
 }
 
-resource "aws_key_pair" "DR_TF_Key" {
-  key_name   = "DR_TF_Key"
+resource "aws_key_pair" "KEY" {
+  key_name   = "${var.octopus_target_name}_KEY"
   public_key = local_file.TF_Key_Public.content
 }
