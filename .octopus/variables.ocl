@@ -11,3 +11,7 @@ variable "OctopusSpace" {
 variable "OctopusServer" {
     value "https://octopus-operations.octopus.app" {}
 }
+
+variable "OctopusTargetName" {
+    value "DR_TF" {}
+}
