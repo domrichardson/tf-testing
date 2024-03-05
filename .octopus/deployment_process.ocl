@@ -30,6 +30,68 @@ step "apply-a-terraform-template" {
     }
 }
 
+step "wait-for-target" {
+    name = "Wait for Target"
+
+    action {
+        action_type = "Octopus.Script"
+        properties = {
+            Octopus.Action.Script.ScriptBody = <<-EOT
+                #Loop til we see the tentacle we want so that the health check in the next step passes
+                $OctopusServerUrl = "https://octopus-operations.octopus.app"
+                $machineName = $OctopusTargetName"_TARGET"
+                $ApiKey = $OctopusAPIKey
+                $SpaceId = $OctopusSpace
+                
+                
+                $found = $false
+                $count = 0
+                
+                while ($found -eq $false){
+                  $machines = Invoke-RestMethod -Method GET -Uri "$OctopusServerUrl/api/$($SpaceId)/machines" -Headers @{"X-Octopus-ApiKey" = "$ApiKey" }
+                  foreach ($machine in $machines.Items){
+                        if ($machine.Name -eq $machineName){
+                          $found = $true
+                          Write-Host "Found the machine. Sleeping for 30s to make sure it's ready for the health check."
+                          Start-Sleep -s 30
+                          break
+                
+                        }
+                    }
+                  if ($found -eq $false){
+                    write-host "It's not ready yet. Waiting 10 seconds and 🔁 again."
+                    start-sleep -s 10
+                    $count++
+                  }
+                
+                  if ($count -eq 30){
+                  	Write-Error "Tentacle didnt spin up within 5 minutes. You may need to destroy AWS resources and the tentacle in Octopus. Please check both."
+                  }
+                }
+                EOT
+            Octopus.Action.Script.ScriptSource = "Inline"
+            Octopus.Action.Script.Syntax = "PowerShell"
+        }
+        worker_pool = "hosted-ubuntu"
+    }
+}
+
+step "health-check" {
+    name = "Health Check"
+    properties = {
+        Octopus.Action.TargetRoles = "AWS-EC2"
+    }
+
+    action {
+        action_type = "Octopus.HealthCheck"
+        properties = {
+            Octopus.Action.HealthCheck.ErrorHandling = "TreatExceptionsAsErrors"
+            Octopus.Action.HealthCheck.IncludeMachinesInDeployment = "DoNotAlterMachines"
+            Octopus.Action.HealthCheck.Type = "FullHealthCheck"
+        }
+    }
+}
+
 step "manual-intervention-required" {
     name = "Manual Intervention Required"
 
@@ -39,6 +101,7 @@ step "manual-intervention-required" {
             Octopus.Action.Manual.BlockConcurrentDeployments = "False"
             Octopus.Action.Manual.Instructions = "Is it done?"
             Octopus.Action.Manual.ResponsibleTeamIds = "global/everyone"
+            Octopus.Action.RunOnServer = "false"
         }
     }
 }
