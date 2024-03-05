@@ -39,7 +39,7 @@ step "wait-for-target" {
             Octopus.Action.Script.ScriptBody = <<-EOT
                 #Loop til we see the tentacle we want so that the health check in the next step passes
                 $OctopusServerUrl = "https://octopus-operations.octopus.app"
-                $machineName = $OctopusTargetName"_TARGET"
+                $machineName = $OctopusTargetName+"_TARGET"
                 $ApiKey = $OctopusAPIKey
                 $SpaceId = $OctopusSpace
                 
@@ -88,6 +88,7 @@ step "health-check" {
             Octopus.Action.HealthCheck.ErrorHandling = "TreatExceptionsAsErrors"
             Octopus.Action.HealthCheck.IncludeMachinesInDeployment = "DoNotAlterMachines"
             Octopus.Action.HealthCheck.Type = "FullHealthCheck"
+            Octopus.Action.RunOnServer = "false"
         }
     }
 }
