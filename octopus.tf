@@ -15,4 +15,5 @@ resource "octopusdeploy_ssh_connection_deployment_target" "od-ssh-target" {
   account_id            = octopusdeploy_ssh_key_account.ssh-account.id
   roles                 = ["AWS-EC2"]
   dot_net_core_platform = "linux-x64"
+  depends_on            = [octopusdeploy_ssh_key_account.ssh-account]
 }
